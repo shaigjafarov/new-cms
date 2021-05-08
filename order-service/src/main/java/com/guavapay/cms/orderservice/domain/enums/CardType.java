@@ -1,6 +1,6 @@
 package com.guavapay.cms.orderservice.domain.enums;
 
-public enum CartType {
+public enum CardType {
 
     MC ,VISA, UNION_PAY;
 }
