@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 @NoArgsConstructor
 public class CardDTO {
 
+    private Long id;
     private CardType cardType;
     private CardPeriod cardPeriod;
     private String cardHolderName;

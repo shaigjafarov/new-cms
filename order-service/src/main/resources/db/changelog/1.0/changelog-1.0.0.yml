@@ -47,4 +47,10 @@ databaseChangeLog:
               - column:
                   name: urgent
                   type: BOOLEAN
+              - column:
+                  name: account_number
+                  type: VARCHAR(250)
+              - column:
+                  name: card_number
+                  type: VARCHAR(250)
             tableName: order_card
