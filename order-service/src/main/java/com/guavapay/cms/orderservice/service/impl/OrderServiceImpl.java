@@ -1,5 +1,6 @@
 package com.guavapay.cms.orderservice.service.impl;
 
+import com.guavapay.cms.orderservice.config.RabbitConfiguration;
 import com.guavapay.cms.orderservice.domain.entity.Order;
 import com.guavapay.cms.orderservice.domain.enums.Status;
 import com.guavapay.cms.orderservice.domain.model.CardDTO;
@@ -12,6 +13,7 @@ import com.guavapay.cms.orderservice.mapper.OrderMapper;
 import com.guavapay.cms.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final RabbitTemplate  rabbitTemplate;
 
     @Override
     public List<OrderDTO> findOrderDTOListByUserId(Long userId) {
@@ -39,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO createOrder(CardDTO cardDTO, Long userId) {
         Order order = OrderMapper.INSTANCE.cardDTOtoEntity(cardDTO);
         order.setUserId(userId);
-        order.setStatus(Status.GENERATED);
+        order.setStatus(Status.PENDING);
         return OrderMapper.INSTANCE.orderToOrderDTO(orderRepository.save(order));
     }
 
@@ -49,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderInDb = orderRepository.findByIdAndUserId(cardDTO.getId(), userId);
         if (orderInDb == null) {
             throw new OrderNotExist();
-        } else if (orderInDb.getStatus().equals(Status.SUBMITTED)) {
+        } else if (orderInDb.getStatus().equals(Status.SUBMITTED) && orderInDb.getStatus().equals(Status.GENERATED)) {
             throw new OrderAlreadySubmitted();
         }
         Order orderReceived = OrderMapper.INSTANCE.cardDTOtoEntity(cardDTO);
@@ -66,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderInDb = orderRepository.findByIdAndUserId(id, userId);
         if (orderInDb == null) {
             throw new OrderNotExist();
-        } else if (orderInDb.getStatus().equals(Status.SUBMITTED)) {
+        } else if (orderInDb.getStatus().equals(Status.SUBMITTED) && orderInDb.getStatus().equals(Status.GENERATED)) {
             throw new OrderAlreadySubmitted();
         }
 
@@ -83,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
             optionalOrder.ifPresent(order -> {
                 order.setAccountNumber(generatedCardDTO.getAccountNumber());
                 order.setCardNumber(generatedCardDTO.getCardNumber());
+                order.setStatus(Status.GENERATED);
                 orderRepository.save(order);
             });
         } catch (Exception e) {
@@ -96,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderInDb == null) {
             throw new OrderNotExist("order not exist");
         }
+        rabbitTemplate.convertAndSend(RabbitConfiguration.queueSubmitOrder, id);
         orderInDb.setStatus(Status.SUBMITTED);
         return OrderMapper.INSTANCE.orderToOrderDTO(orderRepository.save(orderInDb));
     }

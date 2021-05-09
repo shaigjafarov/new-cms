@@ -33,6 +33,7 @@ public class CardGenerateServiceImpl implements CardGenerateService {
     @Override
     public void cardGenerateProcessing(Long orderId) {
         try {
+            Thread.sleep(10000);
             GeneratedCardDTO generatedCardDTO = randomGenerate();
             generatedCardDTO.setOrderId(orderId);
             var generatedCardDTOJson = new ObjectMapper().writeValueAsString(generatedCardDTO);
