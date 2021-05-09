@@ -14,7 +14,7 @@ public class LocalDatetimeDeserializer extends JsonDeserializer<LocalDateTime> {
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctx)
             throws IOException {
         String str = p.getText();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(str, formatter);
 
     }

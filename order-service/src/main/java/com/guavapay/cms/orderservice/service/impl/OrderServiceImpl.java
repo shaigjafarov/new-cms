@@ -53,9 +53,11 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderAlreadySubmitted();
         }
         Order orderReceived = OrderMapper.INSTANCE.cardDTOtoEntity(cardDTO);
+        orderReceived.setCreatedAt(orderInDb.getCreatedAt());
         orderReceived.setStatus(orderInDb.getStatus());
         orderReceived.setUserId(userId);
-        return OrderMapper.INSTANCE.orderToOrderDTO(orderRepository.save(orderReceived));
+        Order order = orderRepository.save(orderReceived);
+        return OrderMapper.INSTANCE.orderToOrderDTO(order);
     }
 
     @Transactional
