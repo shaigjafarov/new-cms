@@ -1,7 +1,7 @@
 package com.guavapay.cms.orderservice.domain.entity;
 
 import com.guavapay.cms.orderservice.domain.enums.CardPeriod;
-import com.guavapay.cms.orderservice.domain.enums.CartType;
+import com.guavapay.cms.orderservice.domain.enums.CardType;
 import com.guavapay.cms.orderservice.domain.enums.Status;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "order_card",schema = "cms")
+@Table(name = "order_card", schema = "public")
 public class Order extends AbstractEntity{
 
     @Id
@@ -18,9 +18,8 @@ public class Order extends AbstractEntity{
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
     @Enumerated(EnumType.STRING)
-    private CartType cartType;
+    private CardType cardType;
 
     @Enumerated(EnumType.STRING)
     private CardPeriod cardPeriod;

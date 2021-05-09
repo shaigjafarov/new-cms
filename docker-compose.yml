@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    networks:
+      - demo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 9595:8088
+    networks:
+      - demo
+
+  demo:
+    container_name: demo
+    networks:
+      - demo
+    ports:
+      - 8080:8080
+    build:
+      context: .
+      dockerfile: Dockerfiles
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_CONNECTION_IP: db
+      DB_CONNECTION_USERNAME: postgres
+      DB_CONNECTION_PASSWORD: password
+
+volumes:
+  pgdata:
+    external: false
+
+networks:
+  demo:
+    driver: bridge
