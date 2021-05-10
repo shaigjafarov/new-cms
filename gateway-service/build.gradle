@@ -20,6 +20,26 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile 'org.springframework.security:spring-security-web'
+	compile 'org.springframework.security:spring-security-config'
+	compile 'org.springframework.security:spring-security-crypto'
+	runtimeOnly 'org.postgresql:postgresql'
+	compile 'io.jsonwebtoken:jjwt:0.9.1'
+//
+//	implementation 'net.logstash.logback:logstash-logback-encoder:4.9'
+//	implementation 'ch.qos.logback:logback-classic:1.2.3'
+//	implementation 'ch.qos.logback:logback-core:1.2.3'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+//	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services', version: '2.4.3'
+//	compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.3'
+	implementation group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.10.RELEASE'
+//	implementation group: 'org.json', name: 'json', version: '20180813'
+//	implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.5'
+
+
 }
 
 dependencyManagement {
@@ -31,3 +51,4 @@ dependencyManagement {
 test {
 	useJUnitPlatform()
 }
+
