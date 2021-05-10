@@ -1,49 +1,81 @@
-version: '3.1'
+version: '3.5'
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+    ports:
+      - 5672:5672
+      - 15672:15672
+
 
   db:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_PASSWORD=password
-    ports:
-      - 5432:5432
-    networks:
-      - demo
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      POSTGRES_PASSWORD: password
 
-  adminer:
-    container_name: adminer
-    image: adminer
+  postgres_db:
+    image: postgres
+    container_name: postgres_db
     restart: always
     ports:
-      - 9595:8088
-    networks:
-      - demo
-
-  demo:
-    container_name: demo
-    networks:
-      - demo
-    ports:
-      - 8080:8080
-    build:
-      context: .
-      dockerfile: Dockerfiles
-    depends_on:
-      - db
+      - "5432:5432"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
-      DB_CONNECTION_IP: db
-      DB_CONNECTION_USERNAME: postgres
-      DB_CONNECTION_PASSWORD: password
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
 
-volumes:
-  pgdata:
-    external: false
+  adminer:
+    image: adminer
+    container_name: adminer_app
+    restart: always
+    ports:
+      - "9090:8080"
+
+  discovery-service:
+    build: ./discovery-service
+    networks:
+      - backend
+    ports:
+      - 8082:8082
+
+  gateway-service:
+    build: ./gateway-service
+    depends_on:
+      - postgres_db
+    networks:
+      - backend
+    ports:
+      - 8083:8083
+
+  order-service:
+    build: ./order-service
+    depends_on:
+      - discovery-service
+      - rabbitmq
+      - postgres_db
+      - gateway-service
+    networks:
+      - backend
+    ports:
+      - 8084:8084
+
+
+
+
 
 networks:
-  demo:
+  backend:
     driver: bridge
+
+volumes:
+  dbvolume:
+    external: false

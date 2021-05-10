@@ -8,17 +8,23 @@ eureka:
       defaultZone: http://localhost:8082/eureka
     register-with-eureka: true
     fetch-registry: true
+
+
 spring:
+  rabbitmq:
+    username: guest
+    host: localhost
+    password: guest
+    port: 5672
   application:
     name: order-service
+  liquibase:
+    change-log: classpath:/db/changelog/changelog.xml
   datasource:
     url: jdbc:postgresql://localhost:5432/cms
     username: postgres
     password: password
-    driver-class-name: org.postgresql.Driver
+    driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
-  liquibase:
-    change-log: classpath:/db/changelog/changelog.xml
-    enabled: false
