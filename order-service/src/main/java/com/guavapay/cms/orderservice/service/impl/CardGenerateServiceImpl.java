@@ -57,7 +57,7 @@ public class CardGenerateServiceImpl implements CardGenerateService {
         StringBuilder sb = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            // 0-62 (exclusive), random returns 0-61
+             0-62 (exclusive), random returns 0-61
             int rndCharAt = random.nextInt(DATA_FOR_RANDOM_STRING.length());
             char rndChar = DATA_FOR_RANDOM_STRING.charAt(rndCharAt);
 

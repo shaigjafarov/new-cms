@@ -11,8 +11,8 @@
 //    @Bean
 //    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 //        return builder.routes()
-//                .route("integ-api-common", r -> r.path("/common/**")
-//                        .uri("lb://integ-api-common"))
+//                .route( r -> r.path("/cms/**")
+//                        .uri("lb:order-service"))
 //                .build();
 //    }
 //}

@@ -2,7 +2,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8082/eureka
+      defaultZone: http:localhost:8082/eureka
     register-with-eureka: true
     fetch-registry: true
 #  instance:
@@ -32,3 +32,16 @@ management:
 spring:
   application:
     name: gateway
+    default-access-token-validity: 43200000
+    remember-me-access-token-validity: 604800000
+    secret-key: 8HaagcbM7qhUgaxA
+    token-header: Authorization
+    token-header-prefix: Bearer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cms
+    username: postgres
+    password: password
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
