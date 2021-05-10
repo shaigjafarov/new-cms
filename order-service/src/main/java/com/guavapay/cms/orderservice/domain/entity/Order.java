@@ -1,15 +1,19 @@
 package com.guavapay.cms.orderservice.domain.entity;
 
 import com.guavapay.cms.orderservice.domain.enums.CardPeriod;
-import com.guavapay.cms.orderservice.domain.enums.CartType;
+import com.guavapay.cms.orderservice.domain.enums.CardType;
 import com.guavapay.cms.orderservice.domain.enums.Status;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "order_card",schema = "cms")
+@Where(clause = "status <>'DELETED'")
+@Table(name = "order_card")
+@EqualsAndHashCode(callSuper=false)
 public class Order extends AbstractEntity{
 
     @Id
@@ -20,7 +24,7 @@ public class Order extends AbstractEntity{
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    private CartType cartType;
+    private CardType cardType;
 
     @Enumerated(EnumType.STRING)
     private CardPeriod cardPeriod;
@@ -32,5 +36,9 @@ public class Order extends AbstractEntity{
     private String codeWord;
 
     private Long userId;
+
+    private String cardNumber;
+
+    private String accountNumber;
 
 }
