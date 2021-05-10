@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-order-card
+      author: Shaig Jafarov
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: order_card_pkey
+                  name: id
+                  type: bigint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(250)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: card_type
+                  type: VARCHAR(250)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_at
+                  type: timestamp
+                  defaultValue: now()
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: card_holder_name
+                  type: VARCHAR(250)
+              - column:
+                  name: card_period
+                  type: VARCHAR(250)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: code_word
+                  type: VARCHAR(250)
+              - column:
+                  name: urgent
+                  type: BOOLEAN
+              - column:
+                  name: account_number
+                  type: VARCHAR(250)
+              - column:
+                  name: card_number
+                  type: VARCHAR(250)
+            tableName: order_card
