@@ -36,16 +36,6 @@ public class WebSecurityConfiguration {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/sign-in").permitAll()
-                .pathMatchers("/user/register").permitAll()
-                .pathMatchers("/user/activate").permitAll()
-                .pathMatchers("/actuator/**").permitAll()
-                .pathMatchers("/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources/**",
-                        "/configuration/security",
-                        "/swagger-ui/**",
-                        "/webjars/**"
-                ).permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .build();

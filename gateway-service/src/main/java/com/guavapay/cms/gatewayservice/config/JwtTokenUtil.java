@@ -4,8 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,6 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable {
-
 
 
     @Value("${spring.application.secret-key}")
@@ -51,6 +48,7 @@ public class JwtTokenUtil implements Serializable {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
+
     public String generateToken(String username) {
         return doGenerateToken(username);
     }

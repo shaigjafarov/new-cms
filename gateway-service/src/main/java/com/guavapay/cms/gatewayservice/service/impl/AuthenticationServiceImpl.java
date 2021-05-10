@@ -7,7 +7,6 @@ import com.guavapay.cms.gatewayservice.model.AuthRequest;
 import com.guavapay.cms.gatewayservice.model.AuthToken;
 import com.guavapay.cms.gatewayservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +21,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthToken authenticate(AuthRequest authRequest) {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-
-
         String token = jwtTokenUtil.generateToken(authRequest.getUsername());
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
         return AuthToken
                 .builder()

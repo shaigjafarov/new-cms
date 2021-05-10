@@ -20,7 +20,6 @@ public class AuthController {
 
     @RequestMapping(value = "/sign-in", method = RequestMethod.POST)
     public ResponseEntity<AuthToken> signIn(@RequestBody @Valid AuthRequest authRequest) {
-
         return ResponseEntity.ok(authenticationService.authenticate(authRequest));
     }
 

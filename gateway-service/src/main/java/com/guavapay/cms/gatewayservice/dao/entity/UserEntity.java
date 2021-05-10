@@ -1,24 +1,30 @@
 package com.guavapay.cms.gatewayservice.dao.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Collection;
 
-@Builder
 @Data
 @Entity
 @Table(name = "order_users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity implements UserDetails {
 
     @Id
     private Long id;
+    @Column(nullable = false,unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
     private boolean verified;
 

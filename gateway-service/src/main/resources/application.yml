@@ -33,7 +33,6 @@ spring:
   application:
     name: gateway
     default-access-token-validity: 43200000
-    remember-me-access-token-validity: 604800000
     secret-key: 8HaagcbM7qhUgaxA
     token-header: Authorization
     token-header-prefix: Bearer

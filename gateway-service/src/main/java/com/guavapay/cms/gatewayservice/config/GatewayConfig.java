@@ -37,6 +37,7 @@ public class GatewayConfig {
 
     @Value("${spring.application.token-header-prefix}")
     private String tokenHeaderPrefix;
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         System.out.println("srtjhsdfgnhserthqwerh");
@@ -57,7 +58,7 @@ public class GatewayConfig {
     public GlobalFilter c() {
         return (exchange, chain) -> {
             log.info("third pre filter");
-            String stringToken=exchange.getRequest().getHeaders().getFirst("Authorization");
+            String stringToken = exchange.getRequest().getHeaders().getFirst("Authorization");
             String username = null;
             String authToken = null;
             if (stringToken != null && stringToken.startsWith(tokenHeaderPrefix)) {
@@ -71,7 +72,7 @@ public class GatewayConfig {
                             userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
                     exchange.mutate().request(
                             exchange.getRequest().mutate()
-                                    .header("userId",  ((UserEntity) userDetails).getId().toString())
+                                    .header("userId", ((UserEntity) userDetails).getId().toString())
                                     .build())
                             .build();
                 }
