@@ -1,4 +1,4 @@
-package com.guavapay.cms.orderservice.service.impl;
+package com.guavapay.cms.orderservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,9 +24,7 @@ public class CardGenerateServiceImpl implements CardGenerateService {
 
     @Override
     public GeneratedCardDTO randomGenerate() {
-        GeneratedCardDTO generatedCardDTO = new GeneratedCardDTO();
-        generatedCardDTO.setCardNumber(generateRandomPAN());
-        generatedCardDTO.setAccountNumber(generateRandomAccountNumber(10));
+        GeneratedCardDTO generatedCardDTO = new GeneratedCardDTO(generateRandomPAN(),generateRandomAccountNumber(10));
         return generatedCardDTO;
     }
 
@@ -41,8 +39,6 @@ public class CardGenerateServiceImpl implements CardGenerateService {
         } catch (Exception e) {
             log.error("card generated time exception", e);
         }
-
-
     }
 
     private String generateRandomAccountNumber(int length) {

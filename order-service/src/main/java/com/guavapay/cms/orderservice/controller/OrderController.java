@@ -45,8 +45,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Boolean> deleteOrder(@RequestParam Long id, @RequestParam Long userId) {
-       return   ResponseEntity.ok(orderService.deleteOrder(id,userId));
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrder(@RequestParam Long id, @RequestParam Long userId) {
+        orderService.deleteOrder(id,userId);
     }
 
 }

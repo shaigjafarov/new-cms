@@ -1,4 +1,4 @@
-package com.guavapay.cms.orderservice.service.impl;
+package com.guavapay.cms.orderservice.service;
 
 import com.guavapay.cms.orderservice.config.RabbitConfiguration;
 import com.guavapay.cms.orderservice.domain.entity.Order;
@@ -7,6 +7,7 @@ import com.guavapay.cms.orderservice.domain.model.CardDTO;
 import com.guavapay.cms.orderservice.domain.model.GeneratedCardDTO;
 import com.guavapay.cms.orderservice.domain.model.OrderDTO;
 import com.guavapay.cms.orderservice.domain.repository.OrderRepository;
+import com.guavapay.cms.orderservice.exception.NotFoundException;
 import com.guavapay.cms.orderservice.exception.OrderAlreadySubmitted;
 import com.guavapay.cms.orderservice.exception.OrderNotExist;
 import com.guavapay.cms.orderservice.mapper.OrderMapper;
@@ -25,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final RabbitTemplate  rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public List<OrderDTO> findOrderDTOListByUserId(Long userId) {
@@ -50,11 +51,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO updateOrder(CardDTO cardDTO, Long userId) {
         Order orderInDb = orderRepository.findByIdAndUserId(cardDTO.getId(), userId);
-        if (orderInDb == null) {
-            throw new OrderNotExist();
-        } else if (orderInDb.getStatus().equals(Status.SUBMITTED) && orderInDb.getStatus().equals(Status.GENERATED)) {
-            throw new OrderAlreadySubmitted();
-        }
+        checkOrderNotNull(orderInDb);
+        checkOrderAlreadySubmitted(orderInDb.getStatus());
         Order orderReceived = OrderMapper.INSTANCE.cardDTOtoEntity(cardDTO);
         orderReceived.setCreatedAt(orderInDb.getCreatedAt());
         orderReceived.setStatus(orderInDb.getStatus());
@@ -65,17 +63,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Boolean deleteOrder(Long id, Long userId) {
+    public void deleteOrder(Long id, Long userId) {
         Order orderInDb = orderRepository.findByIdAndUserId(id, userId);
-        if (orderInDb == null) {
-            throw new OrderNotExist();
-        } else if (orderInDb.getStatus().equals(Status.SUBMITTED) && orderInDb.getStatus().equals(Status.GENERATED)) {
-            throw new OrderAlreadySubmitted();
-        }
-
-        if (orderRepository.updateStatusByIdAndUserId(Status.DELETED, id, userId) == 0)
-            throw new IllegalArgumentException("Operation failed.");
-        return true;
+        checkOrderNotNull(orderInDb);
+        checkOrderAlreadySubmitted(orderInDb.getStatus());
+        checkDeleteOperation(orderRepository.updateStatusByIdAndUserId(Status.DELETED, id, userId));
     }
 
     @Override
@@ -97,12 +89,26 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO submitOrder(Long id, Long userId) {
         Order orderInDb = orderRepository.findByIdAndUserId(id, userId);
-        if (orderInDb == null) {
-            throw new OrderNotExist("order not exist");
-        }
+        checkOrderNotNull(orderInDb);
         rabbitTemplate.convertAndSend(RabbitConfiguration.queueSubmitOrder, id);
         orderInDb.setStatus(Status.SUBMITTED);
         return OrderMapper.INSTANCE.orderToOrderDTO(orderRepository.save(orderInDb));
+    }
+
+
+    private void checkOrderNotNull(Order order) {
+        if (order == null)
+            throw new OrderNotExist("order not exist");
+    }
+
+    private void checkOrderAlreadySubmitted(Status status) {
+        if (status == Status.SUBMITTED || status == Status.GENERATED)
+            throw new OrderAlreadySubmitted();
+    }
+
+    private void checkDeleteOperation(int response) {
+        if (response == 0)
+            throw new NotFoundException("Operation failed.");
     }
 
 }

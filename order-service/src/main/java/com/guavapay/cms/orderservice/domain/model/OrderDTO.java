@@ -18,7 +18,5 @@ public class OrderDTO {
 
     private Long id;
     private Status status;
-//    @JsonSerialize(using = LocalDateTimeSerializer.class)
-//    @JsonDeserialize(using = LocalDatetimeDeserializer.class)
     protected LocalDateTime createdAt;
 }

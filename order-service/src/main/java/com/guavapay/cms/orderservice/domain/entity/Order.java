@@ -3,17 +3,21 @@ package com.guavapay.cms.orderservice.domain.entity;
 import com.guavapay.cms.orderservice.domain.enums.CardPeriod;
 import com.guavapay.cms.orderservice.domain.enums.CardType;
 import com.guavapay.cms.orderservice.domain.enums.Status;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @Where(clause = "status <>'DELETED'")
 @Table(name = "order_card")
-@EqualsAndHashCode(callSuper=false)
 public class Order extends AbstractEntity{
 
     @Id
