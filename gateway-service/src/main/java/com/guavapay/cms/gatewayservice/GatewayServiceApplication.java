@@ -7,9 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableDiscoveryClient
@@ -17,17 +14,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class GatewayServiceApplication implements CommandLineRunner {
 
-	private  final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(GatewayServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayServiceApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-        UserEntity userEntity = new UserEntity(1L,"test_user","password",true);
-		userRepository.save(userEntity);
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        UserEntity userEntity = new UserEntity(1L, "test_user", "password", true);
+        userRepository.save(userEntity);
+    }
 }

@@ -1,8 +1,5 @@
 package com.guavapay.cms.gatewayservice.model;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Constants {
     private Constants() {}
 
